@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner-container">
+    <div class="inner__header">Profile editing</div>
+    <form action="#" method="post" class="user_form">
+        <div class="inner__form">
+            {% csrf_token %}
+            {% for field in user_form %}
+                <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                <div class="simple-input">{{ field }}</div>
+            {% endfor %}
+            {% for field in profile_form %}
+            {% if field.label != 'Country' %}
+                <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                <div class="simple-input">{{ field }}</div>
+            {% else %}
+                <div class="label">Country: {% if country %} {{ country }} {% else %}-{% endif %}</div>
+                <div class="simple-input">
+                    <input type="text" name="user_country" placeholder="Enter new country or leave blank">
+                </div>
+            {% endif %}
+            {% endfor %}
+            <input class="btn-user" type="submit" value="Save">
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner-container">
+    <div class="inner__redirect_back">
+        <a href="{% if type == 'posts' %}
+        {% url 'post' pk %}
+        {% elif type == 'books' %}
+        {% url 'book' pk %}
+        {% else %}
+        {% url 'management_panel' %}
+        {% endif %}"><i class="fa-regular fa-circle-left"></i></a>
+    </div>
+    <div class="inner__header">Delete "{{ object }}"?</div>
+    <form action="#" method="post">
+        <div class="inner__form">
+            {% csrf_token %}
+            <div>Are you sure?</div>
+            <input class="btn-object" type="submit" value="Delete">
+        </div>
+    </form>
+
+</div>
+{% endblock %}

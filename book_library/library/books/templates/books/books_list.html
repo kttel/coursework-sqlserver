@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner_wrapper">
+    <div class="inner__left">
+        <div class="info__title book__title">Books</div>
+        <div class="book_filter__block">
+            <div class="inner_block__title">Search by author:</div>
+            <div class="inner_block__list">
+                <div class="author__link"><a href="{% url 'books' %}">reset all settings</a></div>
+                {% for author in authors %}
+                    <div class="author__link">
+                        <a href="?author={{ author.id }}">&#9656; {{ author }}</a>
+                    </div>
+                {% empty %}
+                    No authors.
+                {% endfor %}
+            </div>
+        </div>
+        <div class="book_filter__block">
+
+        </div>
+    </div>
+    <div class="inner__right books_page">
+
+        <!-- search block -->
+        <div class="search_block">
+            <div class="search__input">
+                <form method="get">
+                    <div>
+                        <input type="hidden" name="author" value="{{ author }}">
+                        <input class="main_search" type="text" name="search" placeholder="Search by title/synopsis" value="{{ search }}">
+                        <input type="submit" hidden>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- end of search block -->
+
+        {% for book in books %}
+        <div class="book_block">
+            <div class="book__left"><img class="book__image" src="{{ book.img.url }}" alt="book image"></div>
+            <div class="book__right">
+                <div class="book__title">{{ book.title }}</div>
+                {% if book.b_author %}
+                <div class="book__author">{{ book.b_author }}</div>
+                {% endif %}
+                <div class="book__synopsis">{{ book.synopsis|linebreaksbr|truncatechars:400 }}</div>
+                <div class="book__link"><a class="book__btn" href="{% url 'book' book.id %}">See details</a></div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% block pagination %}{% endblock %}
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

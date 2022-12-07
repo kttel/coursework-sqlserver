@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | On The Library Steps</title>
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+{% include 'header.html' %}
+
+{% if messages %}
+<div class="message_wrapper">
+    {% for message in messages %}
+    <div class="message_block message message_{{ message.tags }}">
+        <div class="message_body">{{ message }}</div>
+        <div class="message_button message_close">x</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+
+{% block pagination %}
+<div class="centered-pagination">{% include 'pagination.html' %}</div>
+{% endblock %}
+</div>
+</body>
+<script src="{% static 'js/messages.js' %}"></script>
+</html>

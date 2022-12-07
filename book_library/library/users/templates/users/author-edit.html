@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner-container">
+    <div class="inner__header">Author {% if action == 'Edit' %}editing{% else %}adding{% endif %}</div>
+    <form action="{% if action == 'Edit' %}{% url 'edit-author-result' author.pk %}{% else %}{% url 'create-author-result' %}{% endif %}" method="post" class="author_form" >
+        <div class="inner__form">
+            {% csrf_token %}
+            {% for field in main_form %}
+                {% if field.label != 'Country' and action == 'Edit' or action == 'Create' %}
+                <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                <div class="simple-input">{{ field }}</div>
+                {% endif %}
+                {% if field.label == 'Country' and action == 'Edit' %}
+                <div class="label"><label for="new_country">Change country ({{ country }})</label></div>
+                <div class="simple-input"><input type="text" name="new_country" placeholder="Enter new country or leave blank to save old"></div>
+                {% endif %}
+            {% endfor %}
+            <input class="btn-author" type="submit" value="{% if action == 'Edit' %}Save{% else %}Add{% endif %}">
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner_wrapper">
+    <div class="inner__left">
+        {% if request.user.is_staff %}
+        <div class="detail__buttons">
+            <a href="{% url 'post-edit' post.pk %}"><div class="detail__button">Edit</div></a>
+            <a href="{% url 'delete-post' post.pk %}"><div class="detail__button">Delete</div></a>
+        </div>
+        {% endif %}
+        <div class="post__date">
+            Date published: {{ post.published_date|date:'d.m.Y' }}
+        </div>
+        <div class="post__tags">
+            {% for tag in tags %}
+                <div class="tag">{{ tag.denomination }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="inner__right">
+        <div class="post__title">{{ post.title }}</div>
+        <div class="post__content">{{ post.content|linebreaksbr }}</div>
+    </div>
+</div>
+{% endblock %}

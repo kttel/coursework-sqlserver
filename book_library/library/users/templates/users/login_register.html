@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{% if action == 'login' %}
+<!-- login form -->
+<div class="inner-container">
+    <div class="inner__header">Welcome back!</div>
+    <div class="inner__description">Please log in to continue work with us!</div>
+    <form class="auth_form" action="{% url 'login' %}" method="post">
+        <div class="inner__form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                <div class="simple-input">{{ field }}</div>
+            {% endfor %}
+            <input class="btn-auth" type="submit" value="Login">
+        </div>
+    </form>
+    <div class="inner__description">Don't have an account? <a href="{% url 'register' %}">Sign up!</a></div>
+</div>
+<!-- end of login form -->
+{% elif action == 'register' %}
+<!-- register form -->
+<div class="inner-container">
+    <div class="inner__header">Register your account</div>
+    <div class="inner__description">Sign up to get more opportunities!</div>
+    <form class="auth_form" action="" method="post">
+        <div class="inner__form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                <div class="simple-input">{{ field }}</div>
+            {% endfor %}
+            <input class="btn-auth" type="submit" value="Sign up">
+        </div>
+    </form>
+    <div class="inner__description">Already have an account? <a href="{% url 'login' %}">Log in!</a></div>
+</div>
+<!-- end of register form -->
+{% endif %}
+{% endblock %}

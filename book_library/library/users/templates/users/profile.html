@@ -1,0 +1,66 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="inner_wrapper">
+    <div class="inner__left">
+        <div class="left__buttons">
+            {% if request.user.is_staff %}
+            <a class="user__link" href="{% url 'management_panel' %}"><div class="user__button">Management</div></a>
+            {% endif %}
+            <a class="user__link" href="{% url 'edit-profile' %}"><div class="user__button">Edit</div></a>
+        </div>
+        <div class="left__image">
+            {% if request.user.is_staff %}
+            <img class="user_image" src="{% static 'images/admin.png' %}" alt="admin image">
+            {% else %}
+            <img class="user_image" src="{% static 'images/user.png' %}" alt="user image">
+            {% endif %}
+        </div>
+    </div>
+    <div class="inner__right">
+        <div class="user__information">
+            <div><span class="definition">Email:</span> {{ profile.user.email }}</div>
+            <div><span class="definition">Date of birth:</span> {% if profile.birth_date %}{{ profile.birth_date|date:'d.m.Y' }}{% else%}—{% endif %}</div>
+            <div><span class="definition">Site warnings:</span> {{ profile.warnings_amount }}</div>
+        </div>
+        <div class="user__username">
+            <span class="definition">{{ profile.user.username }}</span>
+            ({% if request.user.is_staff %}administrator{% else %}common user{% endif%})
+        </div>
+        {% if profile.user.first_name or profile.user.last_name %}
+        <div class="user__names">
+            {% if profile.user.first_name %}
+                {{ profile.user.first_name }}
+            {% endif %}
+            {% if profile.user.last_name %}
+                {{ profile.user.last_name }}
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="user__description">
+            <div class="description__title">Description</div>
+            <div class="description__content">
+                {% if profile.description %}
+                    {{ profile.description|linebreaksbr }}
+                {% else %}
+                    Nothing here. Go and add some information!
+                {% endif %}
+            </div>
+        </div>
+        {% if not mailing_record_exists %}
+        <div class="mailing-input">
+            <div class="mailing__header">
+                Want to receive news?
+            </div>
+            <form class="mailing__form" action="{% url 'add_email' %}" method="post">
+                {% csrf_token %}
+                    <div class="simple-input email-input"><input type="email" name="email" value="{{ profile.user.email }}" required readonly></div>
+                    <div><input class="submit_btn" type="submit" value="Add"></div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

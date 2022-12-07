@@ -1,0 +1,184 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner_wrapper">
+    <div class="inner__left management_left">
+        <div class="left__header">Statistics</div>
+        <div class="left__information">
+            <div class="created_amount"><span class="definition">Posts created: </span>{{ posts_amount }}</div>
+            <div class="created_amount"><span class="definition">Tags created: </span>{{ tags_amount }}</div>
+            <div class="created_amount"><span class="definition">Books created: </span>{{ books_amount }}</div>
+            <div class="created_amount"><span class="definition">Genres created: </span>{{ genres_amount }}</div>
+            <div class="created_amount"><span class="definition">Publishers created: </span>{{ publishers_amount }}</div>
+            <div class="created_amount"><span class="definition">Authors created: </span>{{ authors_amount }}</div>
+            <div><ul>Get last log:</div>
+                <li><a class="management__link" href="{% url 'get-last-log' %}?action=Action"> from all</a></li>
+                <li><a class="management__link" href="{% url 'get-last-log' %}?action=Insert"> from adding</a></li>
+                <li><a class="management__link" href="{% url 'get-last-log' %}?action=Update"> from updating</a></li>
+                <li><a class="management__link" href="{% url 'get-last-log' %}?action=Delete"> from deleting</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="inner__right">
+        <div class="management__posts">
+            <div class="management__header">Posts
+                <a class="management__link" href="{% url 'post-create' %}"><i class="fa-solid fa-circle-plus"></i></a>
+            </div>
+            <div class="management__description">
+                <div><span class="definition">Last created post:</span> {{ last_post.title }}</div>
+                <div><span class="definition">Last post date:</span> {{ last_post.published_date }}</div>
+                <div><a class="management__link" href="{% url 'posts' %}"> Go to the posts</a></div>
+            </div>
+        </div>
+        <div class="management__tags">
+            <div class="management__header">Tags</div>
+            <div class="management__description">
+                <div class="tags__list">
+                    {% for tag in tags %}
+                    <div class="simple__tag">
+                        <div class="tag__left">{{ tag.denomination }}</div>
+                        <div class="tag__right"><a href="{% url 'delete-tag-admin' tag.pk %}"><i class="fa-solid fa-delete-left link"></i></a></div>
+                    </div>
+                    {% empty %}
+                    No tags.
+                    {% endfor %}
+                </div>
+                <div class="tags__form">
+                    <form action="{% url 'add-tag' %}" method="post">
+                        <div class="creationg_simple__form">
+                            {% csrf_token %}
+                            {% for field in tag_form %}
+                                <div class="form__field_labels">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label><input type="submit" value="Add">
+                                </div>
+                                <div class="creation__field">{{ field }}</div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="management__books">
+            <div class="management__header">Books
+                <a class="management__link" href="{% url 'add-book' %}"><i class="fa-solid fa-circle-plus"></i></a>
+            </div>
+            <div class="management__description">
+                <div><span class="definition">Last added book:</span> {{ last_book.title }}</div>
+                <div><a class="management__link" href="{% url 'books' %}"> Go to the books</a></div>
+            </div>
+        </div>
+        <div class="management__reviews">
+            <div class="management__header">Reviews</div>
+            <div class="management__description">
+                <div class="simple_sentence">
+                    <span class="definition">Reviews needed to confirm: </span>
+                    {{ reviews_to_confirm }} (<a href="{% url 'confirm-all' %}" class="management__link">confirm all</a>)
+                </div>
+                {% for review in reviews %}
+                <div class="simple__review">
+                    <div class="review_body">
+                        <div><span class="definition">
+                            {% if review.vote == 'up' %}&#8657;
+                            {% elif review.vote == 'down' %}&#8659;
+                            {% endif %}
+                            {{ review.title }}</span> (by {{ review.profile.user.username }}
+                            on {{review.book.title}})</div>
+                        <div>{{ review.content|linebreaksbr }}</div>
+                    </div>
+                    <div class="review_buttons">
+                        <div class="review_button"><a href="{% url 'delete-unconfirmed-review' review.pk %}?warning=1" class="management__link light">delete with warning</a></div>
+                        <div class="review_button"><a href="{% url 'delete-unconfirmed-review' review.pk %}" class="management__link light">delete</a></div>
+                        <div class="review_button"><a href="{% url 'confirm-review' review.pk %}" class="management__link light">confirm</a></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="management__publishers">
+            <div class="management__header">Publishers</div>
+            <div class="management__description">
+                <div class="publishers__list">
+                    {% for publisher in publishers %}
+                    <div class="simple__publisher">
+                        <div class="publisher__left">{{ publisher.denomination }}</div>
+                        <div class="publisher__right">
+                            <a href="{% url 'get-publisher-books' %}?publisher={{ publisher.pk }}"><i class="fa-solid fa-eye link"></i></a>
+                            <a href="{% url 'delete-publisher-admin' publisher.pk %}"><i class="fa-solid fa-delete-left link"></i></a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    No publishers.
+                    {% endfor %}
+                </div>
+                <div class="publishers__form">
+                    <form action="{% url 'add-publisher' %}" method="post">
+                        <div class="creationg_simple__form">
+                            {% csrf_token %}
+                            {% for field in publisher_form %}
+                                <div class="form__field_labels">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label><input type="submit" value="Add">
+                                </div>
+                                <div class="creation__field">{{ field }}</div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="management__genres">
+            <div class="management__header">Genres</div>
+            <div class="management__description">
+                <div class="genres__list">
+                    {% for genre in genres %}
+                    <div class="simple__genre">
+                        <div class="genre__left">{{ genre.denomination }}</div>
+                        <div class="genre__right"><a href="{% url 'delete-genre-admin' genre.pk %}"><i class="fa-solid fa-delete-left link"></i></a></div>
+                    </div>
+                    {% empty %}
+                    No genres.
+                    {% endfor %}
+                </div>
+                <div class="genres__form">
+                    <form action="{% url 'add-genre' %}" method="post">
+                        <div class="creationg_simple__form">
+                            {% csrf_token %}
+                            {% for field in genre_form %}
+                                <div class="form__field_labels">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label><input type="submit" value="Add">
+                                </div>
+                                <div class="creation__field">{{ field }}</div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="management__authors">
+            <div class="management__header">Authors
+                <a class="management__link" href="{% url 'create-author' %}"><i class="fa-solid fa-circle-plus"></i></a>
+            </div>
+            <div class="management__description">
+                <div class="authors__list">
+                    {% for author in authors %}
+                    <div class="simple__author">
+                        <div class="author__left">{{ author.first_name }} {{ author.second_name }}</div>
+                        <div class="author__right">
+                            <a href="{% url 'edit-author' author.pk %}"><i class="fa-solid fa-pen link"></i></a>
+                            <a href="{% url 'delete-author-data' author.pk %}"><i class="fa-solid fa-delete-left link"></i></a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    No authors added.
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="management__mailings">
+            <div class="management__header">Mailings</div>
+            <div class="management__description">
+                <div><span class="definition">Emails added:</span> {{ emails }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

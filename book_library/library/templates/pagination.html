@@ -1,0 +1,34 @@
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}{% if 'author' in request.GET %}&author={{ request.GET.author }}{% endif %}">
+            <div class="pagination_button">
+                &larr;
+            </div>
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}{% if 'author' in request.GET %}&author={{ request.GET.author }}{% endif %}">
+            <div class="pagination_button">
+                {{ page_obj.previous_page_number }}
+            </div>
+        </a>
+    {% endif %}
+
+    <div class="pagination_button current">
+        {{ page_obj.number }}
+    </div>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}{% if 'author' in request.GET %}&author={{ request.GET.author }}{% endif %}">
+            <div class="pagination_button">
+                {{ page_obj.next_page_number }}
+            </div>
+        </a>
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}{% if 'author' in request.GET %}&author={{ request.GET.author }}{% endif %}">
+            <div class="pagination_button">
+                &rarr;
+
+            </div>
+        </a>
+    {% endif %}
+</div>
+{% endif %}

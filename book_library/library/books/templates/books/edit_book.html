@@ -1,0 +1,85 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="inner-container">
+    <div class="inner__header">Book {% if action == 'Edit' %}editing{% else %}adding{% endif %}</div>
+
+    {% if action == 'Edit' and genres %}
+    <div class="inner__description">You can add some new genres: </div>
+    <div class="inner__adding_genre">
+        <form class="genre_form" action="{% url 'add-genre' book.pk %}" method="post">
+            {% csrf_token %}
+            <select name="genre">
+                {% for genre in genres %}
+                <option value="{{ genre.id }}">{{ genre.denomination }}</option>
+                {% endfor %}
+            </select>
+            <input class="btn-post" type="submit" value="Add">
+        </form>
+    </div>
+    {% endif %}
+
+    {% if action == 'Edit' and own_genres %}
+    <div class="inner__description">You can delete some genres: </div>
+    <div class="inner__deleting_genre">
+        <form class="genre_form" action="{% url 'delete-genre-from-book' book.pk %}" method="post">
+            {% csrf_token %}
+            <select name="genre">
+                {% for genre in own_genres %}
+                <option value="{{ genre.id }}">{{ genre.denomination }}</option>
+                {% endfor %}
+            </select>
+            <input class="btn-post" type="submit" value="Delete">
+        </form>
+    </div>
+    {% endif %}
+
+ <!-- authors -->
+    {% if action == 'Edit' and authors %}
+    <div class="inner__description">You can add new authors: </div>
+    <div class="inner__adding_author">
+        <form class="author_form" action="{% url 'add-author-to-book' book.pk %}" method="post">
+            {% csrf_token %}
+            <select name="author">
+                {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.fullname }}</option>
+                {% endfor %}
+            </select>
+            <input class="btn-post" type="submit" value="Add">
+        </form>
+    </div>
+    {% endif %}
+
+    {% if action == 'Edit' and own_authors %}
+    <div class="inner__description">You can delete authors: </div>
+    <div class="inner__deleting_author">
+        <form class="author_form" action="{% url 'delete-author-from-book' book.pk %}" method="post">
+            {% csrf_token %}
+            <select name="author">
+                {% for author in own_authors %}
+                <option value="{{ author.id }}">{{ author.fullname }}</option>
+                {% endfor %}
+            </select>
+            <input class="btn-post" type="submit" value="Delete">
+        </form>
+    </div>
+    {% endif %}
+
+ <!-- authors end -->
+    <form method="post" class="book_form" action="
+    {% if action == 'Add' %}
+    {% url 'add-book-result' %}
+    {% else %}
+    {% url 'edit-book-result' book.pk %}
+    {% endif %}" enctype="multipart/form-data">
+        <div class="inner__form">
+            {% csrf_token %}
+            {% for field in main_form %}
+                <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                <div class="simple-input">{{ field }}</div>
+            {% endfor %}
+            <input class="btn-post" type="submit" value="{% if action == 'Edit' %}Edit{% else %}Create{% endif %}">
+        </div>
+    </form>
+</div>
+{% endblock %}

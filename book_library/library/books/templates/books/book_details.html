@@ -1,0 +1,86 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div class="inner_wrapper">
+    <div class="inner__left">
+        {% if request.user.is_staff %}
+        <div class="detail__buttons">
+            <a href="{% url 'edit-book' book.pk %}"><div class="detail__button">Edit</div></a>
+            <a href="{% url 'book-delete' book.pk %}"><div class="detail__button">Delete</div></a>
+        </div>
+        {% endif %}
+        <div class="left__image"><img class="book__full" src="{{ book.img.url }}" alt="book cover"></div>
+        <div class="post__genres">
+            {% for genre in genres %}
+                <div class="genre">{{ genre.denomination }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="inner__right">
+        <div class="right__book">
+            <div class="book__title">{{ book.title }}</div>
+            <div class="book__isbn"><span class="definition">ISBN-13:</span> {{ book.isbn }}</div>
+            <div class="book__publisher"><span class="definition">Publisher:</span> {{ book.publisher.denomination }}</div>
+            <div class="book__synopsis">{{ book.synopsis|linebreaksbr }}</div>
+        </div>
+        <div class="right__author">
+            {% for author in authors %}
+            <div class="author__name">
+                About {{ author.fullname }}:
+            </div>
+            <div class="author__born">
+                {% if author.gender == 'f' %}She {% elif author.gender == 'm' %}He {% endif %}
+                was born in {{ author.birth_date }}, {{ author.country.name }}.
+            </div>
+            <div class="author__biography">
+                {{ author.biography|linebreaksbr }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="right__reviews">
+            <div class="block_title">Reviews</div>
+            <div class="review__form">
+                {% if allowed_to_post %}
+                <form class="form_review" method="post">
+                    <div class="inner__form">
+                        {% csrf_token %}
+                        {% for field in main_form %}
+                            <div class="label"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                            <div class="simple-input">{{ field }}</div>
+                        {% endfor %}
+                        <input class="review_btn" type="submit" value="Leave review">
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+            {% for review in reviews %}
+                <div class="review__block">
+                    <div class="review__left"></div>
+                    <div class="review__right">
+                        <div class="review__title">
+                            <span class="definition">
+                                {% if review.vote == 'up' %}&#8657;
+                                {% elif review.vote == 'down' %}&#8659;
+                                {% endif %} {{ review.title }}
+                                {% if review.profile.user == request.user or request.user.is_staff %}
+                                <a href="{% url 'delete-review' review.pk %}"><i class="fa-solid fa-delete-left link"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="review__content">
+                            {{ review.content }}
+                        </div>
+                        <div class="review__date">
+                            {{ review.date_published }} by <span class="definition">{{ review.profile.user.username }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty">No reviews.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

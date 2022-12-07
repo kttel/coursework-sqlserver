@@ -1,0 +1,62 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<!-- greeting block -->
+<div class="greeting">
+    <div class="greeting__header">«On The Library Steps»</div>
+    <div class="greeting__content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque.
+        Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris
+        molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna.
+        Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros
+        sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet.
+        Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis
+        ornare accumsan, blandit sed diam.
+    </div>
+</div>
+<!-- end of greeting block -->
+<div class="position">
+    <div class="position__header">Visit our local library!</div>
+    <div class="position__short_intro">Ukraine, Mykolaiv</div>
+    <div class="position__content">
+        <div class="content__image">
+            <img src="{% static 'images/library1.jpg' %}" alt="library image">
+            <div class="image_description">
+                abundance
+            </div>
+        </div>
+        <div class="content__image">
+            <img src="{% static 'images/library2.jpg' %}" alt="library image">
+            <div class="image_description">
+                events
+            </div>
+        </div>
+        <div class="content__image">
+            <img src="{% static 'images/library3.jpg' %}" alt="library image">
+            <div class="image_description">
+                exquisiteness
+            </div>
+        </div>
+    </div>
+</div>
+<div class="possibilities">
+    <div class="possibilities__header">Your possibilities:</div>
+    <div class="possibilities__content">
+        <div class="possibility">
+            <div><i class="fa-solid fa-caret-right"></i></div>
+            <div>you can find the book you're interested in
+            and read about it to find out whether you
+            want to buy it or not - all books that you
+            can see are available in our local library</div>
+        </div>
+        <div class="possibility">
+            <div><i class="fa-solid fa-caret-right"></i></div>
+            <div>you can get know about all events, festivals, new
+            arrivals by reading up-to-date posts on the main
+            page to get a lot of chances to catch something
+            interestring and entertain yourself</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
